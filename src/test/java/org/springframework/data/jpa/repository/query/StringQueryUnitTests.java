@@ -17,6 +17,7 @@ package org.springframework.data.jpa.repository.query;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
@@ -272,7 +273,9 @@ public class StringQueryUnitTests {
 		StringQuery query = new StringQuery("select a from A a where a.b in ?#{#bs} and a.c in ?#{#cs}");
 		String queryString = query.getQueryString();
 
-		assertThat(queryString, is("select a from A a where a.b in ?1 and a.c in ?2"));
+		assertThat(queryString).isEqualTo("select a from A a where a.b in ?1 and a.c in ?2");
+		assertThat(query.getParameterBindings().get(0).getExpression()).isEqualTo("#bs");
+		assertThat(query.getParameterBindings().get(1).getExpression()).isEqualTo("#cs");
 	}
 
 	@Test // DATAJPA-864
